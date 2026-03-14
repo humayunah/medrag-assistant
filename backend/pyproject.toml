@@ -13,23 +13,27 @@ dependencies = [
     "groq>=1.1.1",
     "httpx>=0.28.1",
     "huggingface-hub>=1.6.0",
-    "opencv-python-headless>=4.13.0.92",
+    "numpy>=2.2.6",
     "pgvector>=0.4.2",
-    "pillow>=12.1.1",
     "pydantic-settings>=2.13.1",
     "pydantic[email]>=2.12.5",
     "pymupdf>=1.27.2",
     "pymupdf4llm>=1.27.2.1",
-    "pytesseract>=0.3.13",
     "python-jose[cryptography]>=3.5.0",
     "python-magic-bin>=0.4.14; sys_platform == 'win32'",
     "python-magic>=0.4.27; sys_platform == 'linux'",
     "python-multipart>=0.0.22",
-    "sentence-transformers>=5.3.0",
     "sqlalchemy[asyncio]>=2.0.48",
     "structlog>=25.5.0",
     "supabase>=2.28.0",
     "uvicorn[standard]>=0.41.0",
+]
+
+[project.optional-dependencies]
+ocr = [
+    "opencv-python-headless>=4.13.0.92",
+    "pillow>=12.1.1",
+    "pytesseract>=0.3.13",
 ]
 
 [dependency-groups]

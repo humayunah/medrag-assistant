@@ -1,10 +1,7 @@
 FROM python:3.13-slim
 
-# System dependencies for Tesseract OCR and OpenCV
+# System dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    tesseract-ocr \
-    libgl1 \
-    libglib2.0-0 \
     libmagic1 \
     && rm -rf /var/lib/apt/lists/*
 
@@ -30,4 +27,5 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/live')" || exit 1
 
 # Run with uvicorn (1 worker for free tier 512MB RAM)
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+# Render sets PORT env var; default to 8000 for local dev
+CMD uv run uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1
