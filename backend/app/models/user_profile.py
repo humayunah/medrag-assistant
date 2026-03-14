@@ -21,7 +21,12 @@ class UserProfile(TimestampMixin, Base):
         index=True,
     )
     role: Mapped[AppRole] = mapped_column(
-        Enum(AppRole, name="app_role", create_type=False),
+        Enum(
+            AppRole,
+            name="app_role",
+            create_type=False,
+            values_callable=lambda e: [x.value for x in e],
+        ),
         nullable=False,
         default=AppRole.STAFF,
     )

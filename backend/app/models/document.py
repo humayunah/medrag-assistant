@@ -27,7 +27,12 @@ class Document(UpdateTimestampMixin, Base):
     mime_type: Mapped[str] = mapped_column(String(100), nullable=False)
     file_size_bytes: Mapped[int] = mapped_column(Integer, nullable=False)
     status: Mapped[DocumentStatus] = mapped_column(
-        Enum(DocumentStatus, name="document_status", create_type=False),
+        Enum(
+            DocumentStatus,
+            name="document_status",
+            create_type=False,
+            values_callable=lambda e: [x.value for x in e],
+        ),
         nullable=False,
         default=DocumentStatus.PENDING,
     )

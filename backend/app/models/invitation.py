@@ -31,11 +31,21 @@ class Invitation(TimestampMixin, Base):
     )
     email: Mapped[str] = mapped_column(String(320), nullable=False)
     role: Mapped[AppRole] = mapped_column(
-        Enum(AppRole, name="app_role", create_type=False),
+        Enum(
+            AppRole,
+            name="app_role",
+            create_type=False,
+            values_callable=lambda e: [x.value for x in e],
+        ),
         nullable=False,
     )
     status: Mapped[InvitationStatus] = mapped_column(
-        Enum(InvitationStatus, name="invitation_status", create_type=False),
+        Enum(
+            InvitationStatus,
+            name="invitation_status",
+            create_type=False,
+            values_callable=lambda e: [x.value for x in e],
+        ),
         nullable=False,
         default=InvitationStatus.PENDING,
     )

@@ -45,8 +45,8 @@ from app.services.chunking_service import chunk_document
 # ---------------------------------------------------------------------------
 
 MTSAMPLES_CSV_URL = (
-    "https://raw.githubusercontent.com/GabrielePicco662/"
-    "MEDTRANSCRIPTIONS/main/mtsamples.csv"
+    "https://raw.githubusercontent.com/eshza/"
+    "medicalTranscriptsKaggle/master/mtsamples.csv"
 )
 
 DEMO_TENANT_NAME = "Demo Medical Center"
