@@ -1,0 +1,19 @@
+name: Render Keep-Alive
+
+on:
+  schedule:
+    - cron: "*/14 * * * *"  # Every 14 minutes
+  workflow_dispatch:
+
+jobs:
+  ping:
+    name: Ping Render
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping health endpoint
+        run: |
+          curl -sf https://medrag-assistant.onrender.com/health/live \
+            --max-time 30 \
+            --retry 2 \
+            --retry-delay 5 \
+            || echo "Ping failed — Render may be cold-starting"
