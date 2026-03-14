@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     # Rate Limiting
     RATE_LIMIT_QUERY: int = 10  # per minute
     RATE_LIMIT_UPLOAD: int = 20  # per hour
-    RATE_LIMIT_DEMO: int = 5  # per hour per IP
+    RATE_LIMIT_DEMO: int = 30  # per hour per IP
 
     # File Upload
     MAX_FILE_SIZE_MB: int = 10
