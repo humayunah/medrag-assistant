@@ -17,7 +17,7 @@ _MODEL_ID: Final[str] = "NeuML/pubmedbert-base-embeddings"
 _EMBEDDING_DIM: Final[int] = 768
 _MAX_BATCH_SIZE: Final[int] = 32
 _API_URL: Final[str] = (
-    f"https://api-inference.huggingface.co/pipeline/feature-extraction/{_MODEL_ID}"
+    f"https://router.huggingface.co/pipeline/feature-extraction/{_MODEL_ID}"
 )
 
 _MAX_RETRIES: Final[int] = 3

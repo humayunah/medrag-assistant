@@ -82,20 +82,30 @@ class RAGService:
                 cached=True,
             )
 
-        # Step 1: Embed the query
-        query_embedding = await self._embedding_service.embed_query(query_text)
+        # Step 1: Embed the query (graceful fallback to BM25-only)
+        query_embedding = None
+        try:
+            query_embedding = await self._embedding_service.embed_query(query_text)
+        except Exception as exc:
+            logger.warning("embedding_failed_fallback_bm25", error=str(exc))
 
-        # Step 2: Hybrid retrieval
-        vector_results = await self._vector_search(
-            db, tenant_id, query_embedding, document_ids
-        )
+        # Step 2: Hybrid retrieval (or BM25-only if embedding failed)
+        vector_results = []
+        if query_embedding is not None:
+            vector_results = await self._vector_search(
+                db, tenant_id, query_embedding, document_ids
+            )
         bm25_results = await self._bm25_search(db, tenant_id, query_text, document_ids)
 
         # Step 3: RRF fusion
         fused = self._rrf_fusion(vector_results, bm25_results)
 
-        # Step 4: Quality gate
-        filtered = [r for r in fused if r["score"] >= _SIMILARITY_THRESHOLD]
+        # Step 4: Quality gate (skip threshold for BM25-only since RRF scores
+        # are much smaller than cosine similarity scores)
+        if vector_results:
+            filtered = [r for r in fused if r["score"] >= _SIMILARITY_THRESHOLD]
+        else:
+            filtered = fused  # BM25 tsquery already filters for relevance
         top_chunks = filtered[:_FINAL_TOP_K]
 
         # Step 5: Build conversation context
