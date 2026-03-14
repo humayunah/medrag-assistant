@@ -50,6 +50,6 @@ class MessageResponse(BaseModel):
     id: uuid.UUID
     role: str
     content: str
-    citations: dict | None = None
+    citations: list | None = None
     llm_provider: str | None = None
     created_at: datetime
