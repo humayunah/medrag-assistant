@@ -16,8 +16,21 @@ async def lifespan(app: FastAPI):
     """Application lifespan: startup and shutdown."""
     setup_logging()
 
+    import structlog
+    _logger = structlog.get_logger("startup")
+    _logger.info(
+        "db_config_check",
+        has_db_url=bool(settings.DATABASE_URL),
+        has_pool_url=bool(settings.DATABASE_POOL_URL),
+        db_url_prefix=settings.DATABASE_URL[:30] if settings.DATABASE_URL else "empty",
+    )
+
     if settings.DATABASE_URL or settings.DATABASE_POOL_URL:
-        init_engine()
+        try:
+            init_engine()
+            _logger.info("db_engine_initialized")
+        except Exception as e:
+            _logger.error("db_engine_init_failed", error=str(e))
 
     yield
 
