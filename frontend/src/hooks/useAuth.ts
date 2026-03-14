@@ -97,6 +97,7 @@ export function useAuth() {
       profile: null,
       loading: false,
       role: null,
+      isDemo: false,
     });
   }, []);
 
