@@ -8,6 +8,7 @@ prompt construction with citation instructions, and response caching.
 from __future__ import annotations
 
 import hashlib
+import re
 import uuid
 
 import structlog
@@ -209,6 +210,21 @@ class RAGService:
         rows = result.mappings().all()
         return [dict(r) for r in rows]
 
+    @staticmethod
+    def _build_or_tsquery(query_text: str) -> str:
+        """Build an OR-based tsquery string from natural language.
+
+        Extracts alphanumeric words (3+ chars) and joins with OR operators
+        so that chunks matching *any* query term are retrieved, rather than
+        requiring ALL terms to appear (which plainto_tsquery enforces).
+        """
+        words = re.findall(r"[a-zA-Z0-9]+", query_text)
+        words = [w for w in words if len(w) > 2]
+        if not words:
+            # Single short word or empty — fall back to the raw text
+            return query_text.strip() or "empty"
+        return " | ".join(words)
+
     async def _bm25_search(
         self,
         db: AsyncSession,
@@ -216,11 +232,16 @@ class RAGService:
         query_text: str,
         document_ids: list[uuid.UUID] | None,
     ) -> list[dict]:
-        """Full-text search via PostgreSQL tsvector/tsquery."""
+        """Full-text search via PostgreSQL tsvector/tsquery.
+
+        Uses OR-based matching so natural language questions retrieve chunks
+        containing any of the query terms, not all of them.
+        """
         doc_filter = ""
+        or_tsquery = self._build_or_tsquery(query_text)
         params: dict = {
             "tenant_id": tenant_id,
-            "query": query_text,
+            "tsquery": or_tsquery,
             "limit": _BM25_TOP_K,
         }
 
@@ -232,11 +253,11 @@ class RAGService:
             SELECT dc.id, dc.document_id, dc.content, dc.page_number,
                    dc.section_title, dc.chunk_index,
                    d.filename,
-                   ts_rank_cd(dc.search_vector, plainto_tsquery('english', :query)) AS bm25_score
+                   ts_rank_cd(dc.search_vector, to_tsquery('english', :tsquery)) AS bm25_score
             FROM document_chunks dc
             JOIN documents d ON d.id = dc.document_id
             WHERE dc.tenant_id = :tenant_id
-              AND dc.search_vector @@ plainto_tsquery('english', :query)
+              AND dc.search_vector @@ to_tsquery('english', :tsquery)
               {doc_filter}
             ORDER BY bm25_score DESC
             LIMIT :limit
