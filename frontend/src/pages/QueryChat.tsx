@@ -25,19 +25,19 @@ const COLOR = {
 
 async function fetchConversations(): Promise<Conversation[]> {
   const { data } = await api.get("/conversations");
-  return data;
+  return data.conversations ?? [];
 }
 
 async function fetchMessages(conversationId: string): Promise<QueryMessage[]> {
   const { data } = await api.get(
     `/conversations/${conversationId}/messages`,
   );
-  return data;
+  return Array.isArray(data) ? data : data.messages ?? [];
 }
 
 async function fetchDocuments(): Promise<Document[]> {
   const { data } = await api.get("/documents");
-  return data;
+  return data.documents ?? [];
 }
 
 async function deleteConversation(id: string): Promise<void> {
