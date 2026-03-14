@@ -2,8 +2,8 @@ import structlog
 from fastapi import APIRouter
 from sqlalchemy import text
 
+from app.core import database
 from app.core.config import settings
-from app.core.database import async_session_factory
 from app.schemas.common import HealthResponse
 
 logger = structlog.get_logger("health")
@@ -23,8 +23,8 @@ async def readiness():
 
     # Database check
     try:
-        if async_session_factory:
-            async with async_session_factory() as session:
+        if database.async_session_factory:
+            async with database.async_session_factory() as session:
                 await session.execute(text("SELECT 1"))
             checks["database"] = "ok"
         else:
