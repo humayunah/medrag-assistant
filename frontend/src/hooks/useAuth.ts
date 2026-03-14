@@ -10,6 +10,7 @@ interface AuthState {
   profile: UserProfile | null;
   loading: boolean;
   role: AppRole | null;
+  isDemo: boolean;
 }
 
 export function useAuth() {
@@ -19,6 +20,7 @@ export function useAuth() {
     profile: null,
     loading: true,
     role: null,
+    isDemo: false,
   });
 
   const fetchProfile = useCallback(async () => {
@@ -105,9 +107,14 @@ export function useAuth() {
     if (error) throw error;
   }, []);
 
+  const enterDemoMode = useCallback(() => {
+    setState((s) => ({ ...s, isDemo: true, loading: false }));
+  }, []);
+
   return {
     ...state,
-    isAuthenticated: !!state.session,
+    isAuthenticated: !!state.session || state.isDemo,
+    enterDemoMode,
     signIn,
     signUp,
     signOut,

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
+import { useAuthContext } from "../components/AuthProvider";
 
 /* ------------------------------------------------------------------ */
 /*  Design tokens                                                      */
@@ -53,6 +54,7 @@ const SUGGESTIONS = [
 
 export default function Demo() {
   const navigate = useNavigate();
+  const { enterDemoMode } = useAuthContext();
 
   const [status, setStatus] = useState<"loading" | "ready" | "error">(
     "loading",
@@ -82,6 +84,7 @@ export default function Demo() {
         (window as unknown as Record<string, unknown>).__demoTenantId =
           data.demo_tenant_id;
 
+        enterDemoMode();
         setStatus("ready");
       } catch (err: unknown) {
         if (cancelled) return;
