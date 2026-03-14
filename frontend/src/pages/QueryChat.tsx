@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../services/api";
 import type {
@@ -59,6 +60,7 @@ async function postQuery(payload: QueryPayload): Promise<QueryResponse> {
 
 export default function QueryChat() {
   const queryClient = useQueryClient();
+  const location = useLocation();
 
   /* ── Conversations state ── */
   const [activeConversationId, setActiveConversationId] = useState<
@@ -125,6 +127,18 @@ export default function QueryChat() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, queryMutation.isPending]);
+
+  /* ── Prefill from demo suggestion ── */
+  const prefillHandled = useRef(false);
+  useEffect(() => {
+    const prefill = (location.state as { prefill?: string } | null)?.prefill;
+    if (prefill && !prefillHandled.current) {
+      prefillHandled.current = true;
+      setInputValue(prefill);
+      // Clear the state so a page refresh doesn't re-trigger
+      window.history.replaceState({}, "");
+    }
+  }, [location.state]);
 
   /* ── Focus input on conversation change ── */
   useEffect(() => {
