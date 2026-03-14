@@ -22,28 +22,28 @@ const COLOR = {
 
 const SUGGESTIONS = [
   {
-    label: "Cardiology findings",
-    query: "What are the common findings in cardiology reports?",
+    label: "Cardiology",
+    query: "What treatments are used for atrial fibrillation and cardioversion?",
     icon: HeartIcon,
   },
   {
-    label: "Orthopedic procedures",
-    query: "Summarize the orthopedic procedures documented",
+    label: "Orthopedic",
+    query: "What are the post-operative findings in knee arthroplasty?",
     icon: BoneIcon,
   },
   {
-    label: "Neurology medications",
-    query: "What medications are frequently mentioned in neurology cases?",
+    label: "Neurology",
+    query: "What neuropsychological symptoms are evaluated in neurology consultations?",
     icon: BrainIcon,
   },
   {
-    label: "Radiology reports",
-    query: "Describe the typical radiology report findings",
+    label: "Radiology",
+    query: "What did the MRI brain scan reveal?",
     icon: ScanIcon,
   },
   {
-    label: "Gastroenterology discharge",
-    query: "What are the discharge instructions for gastroenterology patients?",
+    label: "Gastroenterology",
+    query: "What are the indications for laparoscopic cholecystectomy?",
     icon: ClipboardIcon,
   },
 ] as const;
