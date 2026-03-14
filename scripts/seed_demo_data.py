@@ -49,6 +49,7 @@ MTSAMPLES_CSV_URL = (
     "medicalTranscriptsKaggle/master/mtsamples.csv"
 )
 
+DEMO_TENANT_ID = uuid.UUID("00000000-0000-0000-0000-000000000000")
 DEMO_TENANT_NAME = "Demo Medical Center"
 DEMO_TENANT_SLUG = "demo"
 DEMO_USER_ID = uuid.UUID("00000000-0000-0000-0000-000000000001")
@@ -191,12 +192,13 @@ async def _seed() -> None:
     async with factory() as session:
         async with session.begin():
             tenant = Tenant(
+                id=DEMO_TENANT_ID,
                 name=DEMO_TENANT_NAME,
                 slug=DEMO_TENANT_SLUG,
                 settings={},
             )
             session.add(tenant)
-            await session.flush()  # populate tenant.id
+            await session.flush()
 
             tenant_id = tenant.id
 
