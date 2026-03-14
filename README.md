@@ -4,7 +4,7 @@
 
 Upload medical documents. Ask questions in plain English. Get citation-backed answers grounded in your data.
 
-[Live Demo](#) &nbsp;&middot;&nbsp; [API Docs](#) &nbsp;&middot;&nbsp; [Architecture](#architecture)
+[Live Demo](https://medrag-assistant.vercel.app/demo) &nbsp;&middot;&nbsp; [API Docs](https://medrag-assistant.onrender.com/docs) &nbsp;&middot;&nbsp; [Architecture](#architecture)
 
 ---
 
@@ -158,7 +158,7 @@ medrag-assistant/
 
 ```bash
 # Clone
-git clone https://github.com/YOUR_USERNAME/medrag-assistant.git
+git clone https://github.com/humayunah/medrag-assistant.git
 cd medrag-assistant
 
 # Copy environment variables
